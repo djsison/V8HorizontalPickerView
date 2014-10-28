@@ -51,7 +51,10 @@ typedef enum {
 
 
 - (void)reloadData;
-- (void)scrollToElement:(NSInteger)index animated:(BOOL)animate;
+// Added reason for scrolling
+- (void)scrollToElement:(NSInteger)index animated:(BOOL)animate reason:(V8HorizontalPickerSelectElementReason)reason;
+// Made this public so that devs can reinitialize
+- (void)initSetup;
 
 @end
 

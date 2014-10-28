@@ -101,6 +101,8 @@ int indexCount;
 	self.infoLabel.backgroundColor = [UIColor blackColor];
 	self.infoLabel.textColor = [UIColor whiteColor];
 	self.infoLabel.textAlignment = UITextAlignmentCenter;
+    self.infoLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    self.infoLabel.numberOfLines = 0;
 	[self.view addSubview:self.infoLabel];
 }
 
@@ -114,7 +116,7 @@ int indexCount;
 
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-	[self.pickerView scrollToElement:0 animated:NO];
+	[self.pickerView scrollToElement:0 animated:NO reason:V8HorizontalPickerSelectElementReasonNone];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -177,7 +179,7 @@ int indexCount;
 
 #pragma mark - Button Tap Handlers
 - (void)nextButtonTapped:(id)sender {
-	[self.pickerView scrollToElement:indexCount animated:NO];
+	[self.pickerView scrollToElement:indexCount animated:NO reason:V8HorizontalPickerSelectElementReasonNone];
 	indexCount += 1;
 	if ([self.titleArray count] <= indexCount) {
 		indexCount = 0;
@@ -214,8 +216,21 @@ int indexCount;
 	return textSize.width + 40.0f; // 20px padding on each side
 }
 
-- (void)horizontalPickerView:(V8HorizontalPickerView *)picker didSelectElementAtIndex:(NSInteger)index {
-	self.infoLabel.text = [NSString stringWithFormat:@"Selected index %d", index];
+- (void)horizontalPickerView:(V8HorizontalPickerView *)picker didSelectElementAtIndex:(NSInteger)index reason:(V8HorizontalPickerSelectElementReason)reason {
+    NSString *reasonStr = @"No reason";
+    switch (reason) {
+        case V8HorizontalPickerSelectElementReasonScrolled:
+            reasonStr = @"Scrolled";
+            break;
+        case V8HorizontalPickerSelectElementReasonTapped:
+            reasonStr = @"Tapped";
+            break;
+            
+        default:
+            break;
+    }
+    
+	self.infoLabel.text = [NSString stringWithFormat:@"Selected index %d and reason %@", index, reasonStr];
 }
 
 @end

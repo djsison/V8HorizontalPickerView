@@ -5,6 +5,13 @@
 //  Copyright 2010 V8 Labs, LLC. All rights reserved.
 //
 
+// Addition: reason for selection (either tapped or scrolled)
+typedef enum {
+    V8HorizontalPickerSelectElementReasonNone = 0,
+    V8HorizontalPickerSelectElementReasonTapped,
+    V8HorizontalPickerSelectElementReasonScrolled
+} V8HorizontalPickerSelectElementReason;
+
 @class V8HorizontalPickerView;
 
 // ------------------------------------------------------------------
@@ -22,7 +29,8 @@
 
 @optional
 // delegate callback to notify delegate selected element has changed
-- (void)horizontalPickerView:(V8HorizontalPickerView *)picker didSelectElementAtIndex:(NSInteger)index;
+// Addition: added reason for selection
+- (void)horizontalPickerView:(V8HorizontalPickerView *)picker didSelectElementAtIndex:(NSInteger)index reason:(V8HorizontalPickerSelectElementReason)reason;
 
 // one of these two methods must be defined
 - (NSString *)horizontalPickerView:(V8HorizontalPickerView *)picker titleForElementAtIndex:(NSInteger)index;

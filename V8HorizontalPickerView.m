@@ -192,11 +192,11 @@
 	// determine if scroll view needs to shift in response to resizing?
 	if (self.currentSelectedIndex > -1 && [self centerOfElementAtIndex:self.currentSelectedIndex] != [self currentCenter].x) {
 		if (adjustWhenFinished) {
-			[self scrollToElement:self.currentSelectedIndex animated:NO];
+			[self scrollToElement:self.currentSelectedIndex animated:NO reason:V8HorizontalPickerSelectElementReasonNone];
 		} else if (self.numberOfElements <= self.currentSelectedIndex) {
 			// if currentSelectedIndex no longer exists, select what is currently centered
 			_currentSelectedIndex = [self nearestElementToCenter];
-			[self scrollToElement:self.currentSelectedIndex animated:NO];
+			[self scrollToElement:self.currentSelectedIndex animated:NO reason:V8HorizontalPickerSelectElementReasonNone];
 		}
 	}
 }
@@ -342,15 +342,15 @@
 
 
 #pragma mark - Scroll To Element Method
-- (void)scrollToElement:(NSInteger)index animated:(BOOL)animate {
+- (void)scrollToElement:(NSInteger)index animated:(BOOL)animate reason:(V8HorizontalPickerSelectElementReason)reason {
 	_currentSelectedIndex = index;
 	int x = [self centerOfElementAtIndex:index] - self.selectionPoint.x;
 	[_scrollView setContentOffset:CGPointMake(x, 0) animated:animate];
 
 	// notify delegate of the selected index
-	SEL delegateCall = @selector(horizontalPickerView:didSelectElementAtIndex:);
+	SEL delegateCall = @selector(horizontalPickerView:didSelectElementAtIndex:reason:);
 	if (self.delegate && [self.delegate respondsToSelector:delegateCall]) {
-		[self.delegate horizontalPickerView:self didSelectElementAtIndex:index];
+		[self.delegate horizontalPickerView:self didSelectElementAtIndex:index reason:reason];
 	}
 
 #if (__IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_4_3)
@@ -690,7 +690,7 @@
 
 // move scroll view to position nearest element under the center
 - (void)scrollToElementNearestToCenter {
-	[self scrollToElement:[self nearestElementToCenter] animated:YES];
+	[self scrollToElement:[self nearestElementToCenter] animated:YES reason:V8HorizontalPickerSelectElementReasonScrolled];
 }
 
 
@@ -701,7 +701,7 @@
 		CGPoint tapLocation    = [recognizer locationInView:_scrollView];
 		NSInteger elementIndex = [self elementContainingPoint:tapLocation];
 		if (elementIndex != -1) { // point not in element
-			[self scrollToElement:elementIndex animated:YES];
+			[self scrollToElement:elementIndex animated:YES reason:V8HorizontalPickerSelectElementReasonTapped];
 		}
 	}
 }
